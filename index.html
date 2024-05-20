@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>music</title>
+    <link rel="shortcut icon" href="Music.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="music">
+        <div class="icon" draggable="true">
+            <img src="meta/Music.png" alt="">
+        </div>
+        <div class="border">
+            <div class="search">
+                <input type="text" name="searchSing" id="searchSing"  placeholder="输入歌曲或者歌手名称">
+                <button id="bt"><img src="meta/search.png" width="15"></button>
+            </div>
+            <div id="list">
+                <!-- <div class="item">
+                    <span class="title">歌曲</span>
+                    <span class="singer">歌手</span>
+                </div> -->
+            </div>    
+            <div class="sing">  
+                <div class="singImg">
+                    <img src="meta/Music.png" alt="" id="singImg">
+                </div>
+                <div class="audio">
+                    <audio src="meta/sing.mp3" id="audio" ></audio>
+                    <button id="play"><img src="meta/play.png" alt=""></button>
+                    <span id="singName">默认歌曲</span>
+                    <span id="singer">~~~</span>
+                    <span id="singTime">00:00:00/00:00:00</span>
+                    <input type="range" name="" id="singRange">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="control.js"></script>
+    <script src="play.js"></script>
+    <script src="getSing.js"></script>
+</body>
+
+</html>
