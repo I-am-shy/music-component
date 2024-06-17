@@ -1,0 +1,94 @@
+
+body {
+  background: #000000;
+}
+
+#container {
+  margin: 0 auto;
+  font-size: 30px;
+  font-family: "楷体";
+  overflow-y: auto;
+  width: 800px;
+  height: 600px;
+  background: #2626269b;
+  color: #fff;
+  /* 平滑滚动 */
+  scroll-behavior: smooth;
+}
+
+#container::-webkit-scrollbar {
+  display: none;
+}
+
+#container .top {
+  margin-left: 20px;
+}
+
+#container .top :nth-child(1) {
+  font-size: 1.4em;
+}
+
+#container .body {
+  margin-left: 20px;
+  margin-top: 40px;
+}
+
+#container .body p {
+  position: relative;
+  height: 20px;
+  cursor: pointer;
+  text-align: left;
+}
+
+#container .body p span {
+  display: none;
+  position: absolute;
+  right: 20px;
+  font-size: 20px;
+  top: 10px;
+}
+
+#container .body p:hover span {
+  display: inline-block;
+}
+
+#container .body p:hover {
+  color: #00ff1e;
+  text-shadow: 0 0 20px #00ff1e9e;
+}
+
+.active {
+  color: #00ff1e;
+}
+.audio{
+  margin: 50px auto;
+  width: 400px;
+}
+.audio input[type="range"]{
+  position: relative;
+  height: 5px;
+  width: 100%;
+  outline: none;
+}
+.audio input[type="range" i]{
+  --p: 0%;
+  -webkit-appearance: none;
+  appearance: none;/*清楚默认样式*/
+  width: 100%;
+  background: linear-gradient(to right ,rgb(106, 255, 106) var(--p),white 0%);/*改变渐变位置*/
+  border: 1px solid rgb(106, 255, 106);
+  border-radius: 10px;
+} 
+.audio input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  appearance: none;/*清楚默认样式*/
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color:rgb(106, 255, 106);
+  transition: 0.5s;
+}
+.audio input[type="range"]:hover::-webkit-slider-thumb{
+  transform: scale(2);
+  background-color:rgb(0, 255, 0);
+}
