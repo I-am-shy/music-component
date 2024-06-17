@@ -1,1 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>歌词模板</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <p id="container"></p>
+  <div class="audio">
+    <audio src="轨迹.mp3" id="audio"></audio>
+    <input type="range" name="" id="singRange">
+    <button id="play">播放</button>
+  </div>
+
+</body>
+<script>
+  const container = document.querySelector("#container");
+  // container.onscroll = ()=>{
+  //   console.log(container.scrollTop);
+  // }
+  let lrcArr = [];// 用来存放歌词的数组
+  let title = {};// 用来存放标题的对象
+  let lrc;// 用来存放处理后的歌词
+  let isScroll = false;// 是否已经滚动,默认没有滚动
+  // 播放歌曲
+  let sing = document.getElementById("audio");
+  let play = document.getElementById("play");
+  let range = document.getElementById("singRange");
+  let playing = false;//默认没有播放
+  range.value = 0;// 初始值为0
+  range.step = 1;
+
+  // 调整进度条
+  range.oninput = () => {
+    // console.log(range.value/range.max);
+    sing.currentTime = range.value;// 将进度条的值设置为当前播放时长
+    range.style.setProperty("--p", `${range.value / range.max * 100}%`);// 改变进度条
+  }
+
+  sing.oncanplay = () => {// 歌曲能播放
+    // duration属性要在歌曲能播放后才有值，否则为NaN
+    // console.log(parseInt(audio.duration));
+    range.max = parseInt(audio.duration);// 将进度条绑定到歌曲时长
+    range.value = parseInt(sing.currentTime);
+    range.style.setProperty("--p", `${range.value / range.max * 100}%`);// 改变进度条
+  }
+
+  sing.ontimeupdate = () => {// 当前播放时长变化
+    if (!range.max) {
+      range.max = parseInt(audio.duration);// 将进度条绑定到歌曲时长
+    }
+    // console.log(parseInt(sing.currentTime),(range.value/range.max).toFixed(4)*100);//当前已经播放的时长
+
+    range.value = parseInt(sing.currentTime);
+    range.style.setProperty("--p", `${range.value / range.max * 100}%`);// 改变进度条
+    // 歌词同步
+    lrcArr.forEach((item, index, arr) => {
+      
+      // 当前播放的时间比本句歌词的时间大，并且比下一句歌词的时间小
+      if (index == arr.length - 1 && parseInt(sing.currentTime) >= timeToDecimal(arr[index].t)) {//最后一句
+        let nlrc = document.getElementsByClassName('lrc')[index];// 当前歌词
+        nlrc.classList.add('active');
+        nlrc.children[0].style.display = 'inline-block';
+        if (nlrc.offsetTop !== 0) {// 忽略空白
+          // 这个方法会一直触发滚动，应该让歌词滚动一次后在几秒后在触发滚动
+          // 添加一个变量判断是否已经滚动
+          if (!isScroll) {
+            isScroll = true;
+            container.scrollTop = nlrc.offsetTop - 300;// 歌词滚动
+            setTimeout(() => {
+              isScroll = false;
+            }, 3000);
+          }
+        }
+        arr.forEach((item, i) => {//将其他歌词颜色去除
+          if (i != index) {
+            let olrc = document.getElementsByClassName('lrc')[i];
+            olrc.classList.remove('active');
+            olrc.children[0].style.display = 'none';
+          }
+        })
+        console.log(item.c);
+      }
+      else if (parseInt(sing.currentTime) >= timeToDecimal(arr[index].t) && parseInt(sing.currentTime) < timeToDecimal(arr[index + 1].t)) {
+        let nlrc = document.getElementsByClassName('lrc')[index];// 当前歌词
+        nlrc.classList.add('active');
+        nlrc.children[0].style.display = 'inline-block';
+        if (nlrc.offsetTop !== 0) {// 忽略空白
+          if (!isScroll) {
+            container.scrollTop = nlrc.offsetTop - 300;// 歌词滚动
+            isScroll = true;
+            let timer = setTimeout(() => {
+              isScroll = false;
+            }, (timeToDecimal(arr[index+1].t) - timeToDecimal(arr[index].t) )*1000/2);// 本句歌词的一半时长
+          }
+        }
+        arr.forEach((item, i) => {//将其他歌词颜色去除
+          if (i != index) {
+            let olrc = document.getElementsByClassName('lrc')[i];
+            olrc.classList.remove('active');
+            olrc.children[0].style.display = 'none';
+          }
+        })
+        // console.log(item.c);
+      }
+    })
+    if (range.value == range.max) {// 歌曲播放完
+      play.onclick();
+      range.value = 0;
+      range.style.setProperty("--p", `${range.value / range.max * 100}%`);// 改变进度条
+    }
+  }
+
+  // 单机播放/暂停
+  play.onclick = () => {
+    if (playing === true) {
+      sing.pause()
+      playing = false;
+      play.innerHTML = "播放";
+    } else {
+      sing.play();
+      playing = true;
+      play.innerHTML = "暂停";
+    }
+  }
+</script>
+
+<script src="lyrics.js"></script>
+
+</html>
