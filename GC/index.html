@@ -19,9 +19,19 @@
 </body>
 <script>
   const container = document.querySelector("#container");
-  // container.onscroll = ()=>{
-  //   console.log(container.scrollTop);
-  // }
+  
+  let timer = setTimeout(()=>{
+    isScroll = false;
+  },4000);
+  container.onscroll = ()=>{
+    // console.log(container.scrollTop);
+    // 主动滚动歌词时不让歌词连续滚动
+    isScroll = true;
+    clearTimeout(timer);// 重置定时器
+    timer = setTimeout(()=>{
+      isScroll = false;
+    },4000);
+  }
   let lrcArr = [];// 用来存放歌词的数组
   let title = {};// 用来存放标题的对象
   let lrc;// 用来存放处理后的歌词
@@ -39,6 +49,11 @@
     // console.log(range.value/range.max);
     sing.currentTime = range.value;// 将进度条的值设置为当前播放时长
     range.style.setProperty("--p", `${range.value / range.max * 100}%`);// 改变进度条
+    // 主动滚动歌词时不让歌词连续滚动
+    isScroll = true;
+    setTimeout(()=>{
+      isScroll = false;
+    },4000);
   }
 
   sing.oncanplay = () => {// 歌曲能播放
@@ -69,11 +84,7 @@
           // 这个方法会一直触发滚动，应该让歌词滚动一次后在几秒后在触发滚动
           // 添加一个变量判断是否已经滚动
           if (!isScroll) {
-            isScroll = true;
             container.scrollTop = nlrc.offsetTop - 300;// 歌词滚动
-            setTimeout(() => {
-              isScroll = false;
-            }, 3000);
           }
         }
         arr.forEach((item, i) => {//将其他歌词颜色去除
@@ -92,10 +103,6 @@
         if (nlrc.offsetTop !== 0) {// 忽略空白
           if (!isScroll) {
             container.scrollTop = nlrc.offsetTop - 300;// 歌词滚动
-            isScroll = true;
-            let timer = setTimeout(() => {
-              isScroll = false;
-            }, (timeToDecimal(arr[index+1].t) - timeToDecimal(arr[index].t) )*1000/2);// 本句歌词的一半时长
           }
         }
         arr.forEach((item, i) => {//将其他歌词颜色去除
